@@ -1,12 +1,8 @@
-import type { Auth } from "@/auth";
+import type { Auth } from "@/auth/types";
 import { nequiAuth } from "@/auth";
 import { GenerateQR } from "@/qr";
-
-export type NequiOptions = {
-  apiKey: string;
-  clientId: string;
-  clientSecret: string;
-};
+import type { ErrorResponse } from "@/error/interfaces";
+import type { NequiOptions, FetchResponse } from "@/types";
 
 export class Nequi {
   private readonly apiKey: string;
@@ -20,7 +16,7 @@ export class Nequi {
       throw new Error(
         `[Nequi SDK]: Proporcione las credenciales ${
           !opts.apiKey ? "apiKey" : !opts.clientId ? "clientId" : "clientSecret"
-        }`,
+        }`
       );
     }
 
@@ -28,7 +24,11 @@ export class Nequi {
     this.clientId = opts.clientId;
     this.clientSecret = opts.clientSecret;
 
-    this.qr = new GenerateQR(this, this.apiKey);
+    this.qr = new GenerateQR(this);
+  }
+
+  public getClientId(): string {
+    return this.clientId;
   }
 
   private async auth(): Promise<Auth | Error> {
@@ -41,7 +41,10 @@ export class Nequi {
     return authenticate;
   }
 
-  async request<T>(url: string, options: RequestInit = {}): Promise<T | null> {
+  async request<const T>(
+    url: string,
+    options: RequestInit
+  ): Promise<FetchResponse<T>> {
     const auth = await this.auth();
 
     if (auth instanceof Error) {
@@ -52,29 +55,69 @@ export class Nequi {
       ...options,
       headers: {
         Authorization: `${auth.tokenType} ${auth.token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-api-key": this.apiKey,
       },
     });
 
     if (!req.ok) {
-      return null;
+      try {
+        const err = await req.text();
+
+        return { data: null, error: JSON.parse(err) };
+      } catch (error) {
+        if (error instanceof SyntaxError) {
+          return {
+            data: null,
+            error: {
+              name: "application_error",
+              message: "Internal server error",
+            },
+          };
+        }
+
+        const err: ErrorResponse = {
+          name: "application_error",
+          message: req.statusText,
+        };
+
+        if (error instanceof Error) {
+          return { data: null, error: { ...err, message: error.message } };
+        }
+
+        return { data: null, error: err };
+      }
     }
 
-    return req.json() as Promise<T>;
+    return {
+      data: (await req.json()) as T,
+      error: null,
+    };
   }
 
-  async get<T>(url: string, options: { query: Record<string, unknown> }): Promise<T | null> {
+  async get<T>(
+    url: string,
+    options: { query: Record<string, unknown> }
+  ): Promise<T | null> {
     const requestOptions = {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
       ...options,
     };
 
-    return this.request<T>(url, requestOptions);
+    const res = await this.request<T>(url, requestOptions);
+
+    return res.data;
   }
 
-  async post<T>(url: string, body: Record<string, any>): Promise<T | null> {
-    return this.request<T>(url, { method: "POST", body: JSON.stringify(body) });
+  async post<T>(url: string, options: RequestInit): Promise<T | null> {
+    const requestOptions = {
+      method: "POST",
+      ...options,
+    };
+
+    const res = await this.request<T>(url, requestOptions);
+
+    return res.data;
   }
 }

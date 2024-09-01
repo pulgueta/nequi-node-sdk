@@ -1,21 +1,14 @@
+import type { Auth, AuthResponse } from "./types";
 import { URLS } from "@/constants";
 
-export type AuthResponse = {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-};
-
-export type Auth = {
-  token: string;
-  tokenType: string;
-  expiresAt: Date;
-  isValid: boolean;
-};
-
-export const nequiAuth = async (clientId: string, clientSecret: string): Promise<Auth | Error> => {
+export const nequiAuth = async (
+  clientId: string,
+  clientSecret: string
+): Promise<Auth | Error> => {
   try {
-    const authToken = `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`;
+    const authToken = `Basic ${Buffer.from(
+      `${clientId}:${clientSecret}`
+    ).toString("base64")}`;
 
     const req = await fetch(`${URLS.AUTH_URI}?grant_type=client_credentials`, {
       method: "POST",
