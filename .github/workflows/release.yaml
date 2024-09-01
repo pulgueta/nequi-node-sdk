@@ -41,8 +41,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build package
-        run: pnpm build
+      - name: Publish package
+        id: changeset
+        uses: changesets/action@v1
+        with:
+          publish: pnpm build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish package
+        if: steps.changeset.outputs.hasChangesets == 'true'
         run: pnpm publish
