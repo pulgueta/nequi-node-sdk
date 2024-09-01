@@ -1,0 +1,65 @@
+{
+  "name": "@pulgueta/nequi-node",
+  "description": "SDK de la comunidad de Nequi para Node.js",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Andrés Rodríguez",
+    "email": "roariasaf@gmail.com",
+    "url": "https://github.com/pulgueta"
+  },
+  "keywords": [
+    "nequi",
+    "sdk",
+    "nequi-sdk",
+    "nequi-node-sdk",
+    "bancolombia",
+    "pagos",
+    "pagos-bancolombia"
+  ],
+  "homepage": "https://github.com/pulgueta/nequi-node-sdk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pulgueta/nequi-node-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pulgueta/nequi-node-sdk/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "format": "biome check --write .",
+    "lint": "oxlint",
+    "build": "tsup",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3",
+    "@commitlint/cli": "^19.4.1",
+    "@commitlint/config-conventional": "^19.4.1",
+    "@commitlint/types": "^19.0.3",
+    "@types/node": "^20.16.2",
+    "conventional-changelog-atom": "^5.0.0",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.9",
+    "oxlint": "^0.9.1",
+    "tsup": "^8.2.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "envalid": "^8.0.0"
+  }
+}
