@@ -1,7 +1,7 @@
 export type CreateQRBody = {
-  amount: number;
-  currency: string;
-  description: string;
+  code: string;
+  value: string;
+  [key: string]: unknown;
 };
 
 export type CreateQRResponse = {
