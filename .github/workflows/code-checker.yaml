@@ -4,6 +4,13 @@ on:
   pull_request:
     branches:
       - main
+  workflow_call:
+    inputs:
+      GH_TOKEN:
+        required: true
+        type: string
+env:
+  GH_TOKEN: ${{ inputs.GH_TOKEN }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
