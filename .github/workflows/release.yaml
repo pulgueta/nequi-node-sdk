@@ -1,7 +1,10 @@
 name: Release package to NPM
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - next
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,9 +18,13 @@ jobs:
       pull-requests: write
     name: Release package
     runs-on: ubuntu-latest
+    environment:
+      name: Release
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -37,7 +44,9 @@ jobs:
         run: pnpm run ci
 
       - name: Publish package
-        run: npx semantic-release
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          semantic_version: latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
