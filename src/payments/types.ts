@@ -1,10 +1,13 @@
-export type CreateQRBody = {
+export type CreatePaymentPushBody = {
+  phoneNumber: string;
   code: string;
   value: string;
-  [key: string]: unknown;
+  reference1: string;
+  reference2: string;
+  reference3: string;
 };
 
-export type CreateQRResponse = {
+export type CreatePaymentPushResponse = {
   ResponseMessage: {
     ResponseHeader: {
       Channel: string;
@@ -24,15 +27,51 @@ export type CreateQRResponse = {
     };
     ResponseBody: {
       any: {
-        generateCodeQRRS: {
-          codeQR: string;
+        unregisteredPaymentRS: {
+          transactionId: string;
         };
       };
     };
   };
 };
 
-export type GetStatusQRResponse = {
+export type CancelUnregisteredPaymentBody = {
+  code: string;
+  phoneNumber: string;
+  transactionId: string;
+};
+
+export type CancelUnregisteredPaymentResponse = {
+  ResponseMessage: {
+    ResponseHeader: {
+      Channel: string;
+      ResponseDate: string;
+      Status: {
+        StatusCode: string;
+        StatusDesc: string;
+      };
+      MessageID: string;
+      ClientID: string;
+      Destination: {
+        ServiceName: string;
+        ServiceOperation: string;
+        ServiceRegion: string;
+        ServiceVersion: string;
+      };
+    };
+    ResponseBody: {
+      any: {
+        cancelRequestMoneyRS: {};
+      };
+    };
+  };
+};
+
+export type GetStatusPaymentBody = {
+  codeQR: string;
+};
+
+export type GetStatusPaymentResponse = {
   ResponseMessage: {
     ResponseHeader: {
       Channel: string;
@@ -63,7 +102,7 @@ export type GetStatusQRResponse = {
               name: string;
               pocketType: string;
               value: string;
-            },
+            }
           ];
           ipAddress: string;
         };
@@ -72,7 +111,7 @@ export type GetStatusQRResponse = {
   };
 };
 
-export type RevertQRBody = {
+export type RevertTransactionBody = {
   phoneNumber: string;
   value: string;
   code: string;
@@ -80,7 +119,7 @@ export type RevertQRBody = {
   type: string;
 };
 
-export type RevertQRResponse = {
+export type RevertTransactionResponse = {
   ResponseMessage: {
     ResponseHeader: {
       Channel: string;

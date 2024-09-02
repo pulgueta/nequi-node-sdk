@@ -1,10 +1,12 @@
-export type CreateQRBody = {
+export type AutomaticPaymentBody = {
+  phoneNumber: string;
   code: string;
   value: string;
-  [key: string]: unknown;
+  token: string;
+  [x: string]: unknown;
 };
 
-export type CreateQRResponse = {
+export type AutomaticPaymentResponse = {
   ResponseMessage: {
     ResponseHeader: {
       Channel: string;
@@ -24,15 +26,20 @@ export type CreateQRResponse = {
     };
     ResponseBody: {
       any: {
-        generateCodeQRRS: {
-          codeQR: string;
+        automaticPaymentRS: {
+          transactionId: string;
+          token: string;
         };
       };
     };
   };
 };
 
-export type GetStatusQRResponse = {
+export type GetStatusPaymentBody = {
+  codeQR: string;
+};
+
+export type GetStatusPaymentResponse = {
   ResponseMessage: {
     ResponseHeader: {
       Channel: string;
@@ -63,7 +70,7 @@ export type GetStatusQRResponse = {
               name: string;
               pocketType: string;
               value: string;
-            },
+            }
           ];
           ipAddress: string;
         };
@@ -72,7 +79,77 @@ export type GetStatusQRResponse = {
   };
 };
 
-export type RevertQRBody = {
+export type CreateSubscriptionBody = {
+  phoneNumber: string;
+  code: string;
+  name: string;
+};
+
+export type CreateSubscriptionResponse = {
+  ResponseMessage: {
+    ResponseHeader: {
+      Channel: string;
+      ResponseDate: string;
+      Status: {
+        StatusCode: string;
+        StatusDesc: string;
+      };
+      MessageID: string;
+      ClientID: string;
+      Destination: {
+        ServiceName: string;
+        ServiceOperation: string;
+        ServiceRegion: string;
+        ServiceVersion: string;
+      };
+    };
+    ResponseBody: {
+      any: {
+        newSubscriptionRS: {
+          token: string;
+        };
+      };
+    };
+  };
+};
+
+export type GetSubscriptionBody = {
+  phoneNumber: string;
+  code: string;
+  token: string;
+};
+
+export type GetSubscriptionResponse = {
+  ResponseMessage: {
+    ResponseHeader: {
+      Channel: string;
+      ResponseDate: string;
+      Status: {
+        StatusCode: string;
+        StatusDesc: string;
+      };
+      MessageID: string;
+      ClientID: string;
+      Destination: {
+        ServiceName: string;
+        ServiceOperation: string;
+        ServiceRegion: string;
+        ServiceVersion: string;
+      };
+    };
+    ResponseBody: {
+      any: {
+        getSubscriptionRS: {
+          dateCreated: string;
+          name: string;
+          status: string;
+        };
+      };
+    };
+  };
+};
+
+export type ReverseTransactionBody = {
   phoneNumber: string;
   value: string;
   code: string;
@@ -80,7 +157,7 @@ export type RevertQRBody = {
   type: string;
 };
 
-export type RevertQRResponse = {
+export type ReverseTransactionResponse = {
   ResponseMessage: {
     ResponseHeader: {
       Channel: string;

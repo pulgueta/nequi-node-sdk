@@ -1,8 +1,12 @@
-import type { Auth } from "@/auth/types";
 import { nequiAuth } from "@/auth";
+import type { Auth } from "@/auth/types";
+import { NequiError } from "@/error";
 import { GenerateQR } from "@/qr";
-import type { ErrorResponse } from "@/error/interfaces";
-import type { NequiOptions, FetchResponse } from "@/types";
+import { PushPayment } from "@/payments";
+import { Subscription } from "@/subscriptions";
+import { Dispersions } from "@/dispersions";
+import { Reports } from "@/reports";
+import type { FetchResponse, NequiOptions } from "@/types";
 
 export class Nequi {
   private readonly apiKey: string;
@@ -10,14 +14,18 @@ export class Nequi {
   private readonly clientSecret: string;
 
   readonly qr: GenerateQR;
+  readonly pushPayment: PushPayment;
+  readonly subscription: Subscription;
+  readonly dispersions: Dispersions;
+  readonly reports: Reports;
 
   constructor(opts: NequiOptions) {
     if (!opts.apiKey || !opts.clientId || !opts.clientSecret) {
-      throw new Error(
-        `[Nequi SDK]: Proporcione las credenciales ${
-          !opts.apiKey ? "apiKey" : !opts.clientId ? "clientId" : "clientSecret"
-        }`
-      );
+      throw NequiError.from({
+        message: "[Nequi SDK]: Proporcione las credenciales",
+        name: "missing_required_field",
+        status: 422,
+      });
     }
 
     this.apiKey = opts.apiKey;
@@ -25,17 +33,21 @@ export class Nequi {
     this.clientSecret = opts.clientSecret;
 
     this.qr = new GenerateQR(this);
+    this.pushPayment = new PushPayment(this);
+    this.subscription = new Subscription(this);
+    this.dispersions = new Dispersions(this);
+    this.reports = new Reports(this);
   }
 
   public getClientId(): string {
     return this.clientId;
   }
 
-  private async auth(): Promise<Auth | Error> {
+  private async auth(): Promise<Auth | NequiError> {
     const authenticate = await nequiAuth(this.clientId, this.clientSecret);
 
-    if (authenticate instanceof Error) {
-      throw new Error(authenticate.message);
+    if (NequiError.isNequiError(authenticate)) {
+      throw NequiError.from(authenticate);
     }
 
     return authenticate;
@@ -47,8 +59,8 @@ export class Nequi {
   ): Promise<FetchResponse<T>> {
     const auth = await this.auth();
 
-    if (auth instanceof Error) {
-      throw new Error(auth.message);
+    if (auth instanceof NequiError) {
+      throw NequiError.from(auth);
     }
 
     const req = await fetch(url, {
@@ -67,23 +79,28 @@ export class Nequi {
 
         return { data: null, error: JSON.parse(err) };
       } catch (error) {
-        if (error instanceof SyntaxError) {
+        if (NequiError.isNequiError(error)) {
           return {
             data: null,
             error: {
               name: "application_error",
               message: "Internal server error",
+              status: 500,
             },
           };
         }
 
-        const err: ErrorResponse = {
+        const err: NequiError = {
           name: "application_error",
           message: req.statusText,
+          status: 500,
         };
 
-        if (error instanceof Error) {
-          return { data: null, error: { ...err, message: error.message } };
+        if (NequiError.isNequiError(error)) {
+          return {
+            data: null,
+            error: { ...err, message: error.message, status: error.status },
+          };
         }
 
         return { data: null, error: err };

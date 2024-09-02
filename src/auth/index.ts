@@ -1,14 +1,10 @@
-import type { Auth, AuthResponse } from "./types";
 import { URLS } from "@/constants";
+import { NequiError } from "@/error";
+import type { Auth, AuthResponse } from "./types";
 
-export const nequiAuth = async (
-  clientId: string,
-  clientSecret: string
-): Promise<Auth | Error> => {
+export const nequiAuth = async (clientId: string, clientSecret: string): Promise<Auth | NequiError> => {
   try {
-    const authToken = `Basic ${Buffer.from(
-      `${clientId}:${clientSecret}`
-    ).toString("base64")}`;
+    const authToken = `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`;
 
     const req = await fetch(`${URLS.AUTH_URI}?grant_type=client_credentials`, {
       method: "POST",
@@ -19,8 +15,12 @@ export const nequiAuth = async (
       },
     });
 
-    if (!req.ok) {
-      throw new Error("[Nequi SDK]: Fallo de autenticación");
+    if (!req.ok || NequiError.isNequiError(req)) {
+      throw NequiError.from({
+        message: "[Nequi SDK]: Fallo de autenticación",
+        name: "invalid_access",
+        status: 422,
+      });
     }
 
     const res = (await req.json()) as AuthResponse;
@@ -32,10 +32,14 @@ export const nequiAuth = async (
       isValid: new Date() < new Date(Date.now() + res.expires_in * 1000),
     };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error("[Nequi SDK]: Fallo de autenticación:", error);
+    if (NequiError.isNequiError(error)) {
+      throw error;
     }
 
-    throw new Error("[Nequi SDK]: Fallo de autenticación");
+    throw NequiError.from({
+      message: "[Nequi SDK]: Fallo de autenticación",
+      name: "authentication_error",
+      status: 401,
+    });
   }
 };
