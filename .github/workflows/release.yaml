@@ -15,15 +15,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  code-quality:
-    name: Code quality
-    uses: ./.github/workflows/code-checker.yaml
-    with:
-      GH_TOKEN: ${{ github.token }}
-
   build:
-    name: Build package
-    needs: [code-quality]
+    name: Release package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
