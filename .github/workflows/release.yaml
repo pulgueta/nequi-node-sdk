@@ -20,6 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Release
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,7 +37,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: ${{ matrix.node-version }}
           cache: "pnpm"
 
       - name: Disable Husky in CI
