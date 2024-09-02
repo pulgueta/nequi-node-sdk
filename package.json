@@ -8,6 +8,9 @@
     "email": "roariasaf@gmail.com",
     "url": "https://github.com/pulgueta"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "nequi",
     "sdk",
