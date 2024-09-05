@@ -34,3 +34,7 @@ const nequi = new Nequi({
 ## Contribuciones
 
 Las contribuciones son bienvenidas. Por favor, lee el [CONTRIBUTING.md](./CONTRIBUTING.md) para más detalles.
+
+## Atribuciones
+
+Este SDK está desarrollado original e inicialmente por Andrés Rodríguez y posteriormente aceptando contribuciones de la comunidad. Cualquier trabajo o release oficial basado en este proyecto debe dársele el crédito correspondiente y no debería reclamarse como trabajo únicamente hecho por la entidad, institución o persona.
