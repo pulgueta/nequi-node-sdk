@@ -1,5 +1,5 @@
 import { CHANNELS, ENDPOINTS, URLS } from "@/constants";
-import { Nequi } from "@/nequi";
+import type { Nequi } from "@/nequi";
 import type { CreateQRBody, CreateQRResponse, GetStatusQRResponse, RevertQRBody, RevertQRResponse } from "./types";
 
 /**

@@ -3,8 +3,7 @@
  */
 export default {
   "branches": [
-    "main",
-    "next"
+    "main"
   ],
   "plugins": [
     "@semantic-release/commit-analyzer",
