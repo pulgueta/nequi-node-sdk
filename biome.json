@@ -4,7 +4,33 @@
     "enabled": true
   },
   "linter": {
-    "enabled": false
+    "enabled": true,
+    "rules": {
+      "complexity": {
+        "recommended": true
+      },
+      "correctness": {
+        "recommended": true
+      },
+      "nursery": {
+        "recommended": true
+      },
+      "performance": {
+        "recommended": true
+      },
+      "security": {
+        "recommended": true
+      },
+      "style": {
+        "recommended": true
+      },
+      "a11y": {
+        "recommended": true
+      },
+      "suspicious": {
+        "recommended": true
+      }
+    }
   },
   "formatter": {
     "enabled": true,

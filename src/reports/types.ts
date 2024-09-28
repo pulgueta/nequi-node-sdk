@@ -37,7 +37,7 @@ export type GetReportsResponse = {
               transactionReference: string;
               messageId: string;
               transactionValue: string;
-            }
+            },
           ];
         };
       };

@@ -27,7 +27,6 @@ const nequi = new Nequi({
   apiKey: "your-api-key",
   clientId: "your-client-id",
   clientSecret: "your-client-secret",
-  // env: "development" | "production" basado en process.env.NODE_ENV
 });
 ```
 

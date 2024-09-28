@@ -9,5 +9,4 @@ export type NequiOptions = {
   apiKey: string;
   clientId: string;
   clientSecret: string;
-  env?: "development" | "production";
 };

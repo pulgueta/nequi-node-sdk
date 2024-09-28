@@ -17,7 +17,7 @@ export class NequiError extends Error implements ErrorResponse {
     return new NequiError(error.message, error.name, ERROR_CODES_BY_KEY[error.name]);
   }
 
-  static isNequiError(error: any): error is NequiError {
+  static isNequiError(error: unknown): error is NequiError {
     return error instanceof NequiError;
   }
 }

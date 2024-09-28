@@ -1,4 +1,3 @@
-import type { Nequi } from "@/nequi";
 import { CHANNELS, ENDPOINTS, URLS } from "@/constants";
 import type {
   CreateDispersionBody,
@@ -6,6 +5,7 @@ import type {
   ReverseDispersionBody,
   ReverseDispersionResponse,
 } from "./types";
+import { NequiRequest } from "@/request";
 
 /**
  * @name Dispersiones
@@ -15,15 +15,9 @@ import type {
  
  * Con el objetivo de que la integración funcione de manera correcta se debe realizar el consumo de todos los servicios. El servicio de dispersión permitirá el procesamiento de la dispersión y el servicio de reversos permitirá reversar las transacciones de dispersión que hayan quedado con el estado declinadas.
  */
-export class Dispersions {
-  readonly clientId: string;
-
-  constructor(private readonly nequi: Nequi) {
-    this.clientId = nequi.getClientId();
-  }
-
+export class Dispersions extends NequiRequest {
   async createDispersion(disperseFundsRQ: CreateDispersionBody) {
-    const req = await this.nequi.post<CreateDispersionResponse>(
+    const req = await this.post<CreateDispersionResponse>(
       `${URLS.BASE_PATH}${ENDPOINTS.DISPERSIONS.CREATE_DISPERSION}`,
       {
         body: JSON.stringify({
@@ -47,14 +41,14 @@ export class Dispersions {
             },
           },
         }),
-      }
+      },
     );
 
     return req;
   }
 
   async reverseDispersion(reverseDispersionRQ: ReverseDispersionBody) {
-    const req = await this.nequi.post<ReverseDispersionResponse>(
+    const req = await this.post<ReverseDispersionResponse>(
       `${URLS.BASE_PATH}${ENDPOINTS.DISPERSIONS.CANCEL_DISPERSION}`,
       {
         body: JSON.stringify({
@@ -78,7 +72,7 @@ export class Dispersions {
             },
           },
         }),
-      }
+      },
     );
 
     return req;
