@@ -70,7 +70,7 @@ export type GetStatusPaymentResponse = {
               name: string;
               pocketType: string;
               value: string;
-            }
+            },
           ];
           ipAddress: string;
         };

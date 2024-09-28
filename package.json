@@ -11,15 +11,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": [
-    "nequi",
-    "sdk",
-    "nequi-sdk",
-    "nequi-node-sdk",
-    "bancolombia",
-    "pagos",
-    "pagos-bancolombia"
-  ],
+  "keywords": ["nequi", "sdk", "nequi-sdk", "nequi-node-sdk", "bancolombia", "pagos", "pagos-bancolombia"],
   "homepage": "https://github.com/pulgueta/nequi-node-sdk",
   "repository": {
     "type": "git",
@@ -43,9 +35,7 @@
       }
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "format": "biome format --write .",
     "lint": "biome lint --write --unsafe .",

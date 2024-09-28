@@ -1,8 +1,5 @@
 export const URLS = {
-  BASE_PATH:
-    process.env.NODE_ENV === "development"
-      ? "https://api.sandbox.nequi.com"
-      : "https://api.nequi.com",
+  BASE_PATH: process.env.NODE_ENV === "development" ? "https://api.sandbox.nequi.com" : "https://api.nequi.com",
   AUTH_URI:
     process.env.NODE_ENV === "development"
       ? "https://oauth.sandbox.nequi.com/oauth2/token"
@@ -24,8 +21,7 @@ export const ENDPOINTS = {
   SUBSCRIPTION: {
     AUTOMATIC_PAYMENT: "/-services-subscriptionpaymentservice-automaticpayment",
     STATUS_PAYMENT: "/-services-subscriptionpaymentservice-getstatuspayment",
-    CREATE_SUBSCRIPTION:
-      "/-services-subscriptionpaymentservice-newsubscription",
+    CREATE_SUBSCRIPTION: "/-services-subscriptionpaymentservice-newsubscription",
     GET_SUBSCRIPTION: "/-services-subscriptionpaymentservice-getsubscription",
     REVERSE_TRANSACTION: "/-services-reverseservices-reversetransaction",
   },

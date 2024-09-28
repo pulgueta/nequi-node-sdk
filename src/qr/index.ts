@@ -1,20 +1,14 @@
 import { CHANNELS, ENDPOINTS, URLS } from "@/constants";
-import type { Nequi } from "@/nequi";
 import type { CreateQRBody, CreateQRResponse, GetStatusQRResponse, RevertQRBody, RevertQRResponse } from "./types";
+import { NequiRequest } from "@/request";
 
 /**
  * @name Pagos con QR code
  * @description Servicio para integrar APIs con comercios electrónicos y recibir pagos con Nequi a través de QR dinámicos.
  */
-export class GenerateQR {
-  private readonly clientId: string;
-
-  constructor(private readonly nequi: Nequi) {
-    this.clientId = nequi.getClientId();
-  }
-
+export class GenerateQR extends NequiRequest {
   async createQR(generateCodeQRRQ: CreateQRBody) {
-    const req = await this.nequi.post<CreateQRResponse>(`${URLS.BASE_PATH}${ENDPOINTS.QR.GENERATE}`, {
+    const req = await this.post<CreateQRResponse>(`${URLS.BASE_PATH}${ENDPOINTS.QR.GENERATE}`, {
       body: JSON.stringify({
         RequestMessage: {
           RequestHeader: {
@@ -42,7 +36,7 @@ export class GenerateQR {
   }
 
   async getStatus(codeQR: string) {
-    const req = await this.nequi.post<GetStatusQRResponse>(`${URLS.BASE_PATH}${ENDPOINTS.QR.STATUS}`, {
+    const req = await this.post<GetStatusQRResponse>(`${URLS.BASE_PATH}${ENDPOINTS.QR.STATUS}`, {
       body: JSON.stringify({
         RequestMessage: {
           RequestHeader: {
@@ -72,7 +66,7 @@ export class GenerateQR {
   }
 
   async revert(reversionRQ: RevertQRBody) {
-    const req = await this.nequi.post<RevertQRResponse>(`${URLS.BASE_PATH}${ENDPOINTS.QR.REVERT}`, {
+    const req = await this.post<RevertQRResponse>(`${URLS.BASE_PATH}${ENDPOINTS.QR.REVERT}`, {
       body: JSON.stringify({
         RequestMessage: {
           RequestHeader: {
